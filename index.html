@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Y-Plaza</h1>
+
+<button onclick="loadData()">Afficher les biens</button>
+
+<ul id="list"></ul>
+
+<script>
+function loadData() {
+    fetch('http://localhost:3000/biens')
+    .then(res => res.json())
+    .then(data => {
+        let list = document.getElementById("list")
+        list.innerHTML = ""
+
+        data.forEach(bien => {
+            let li = document.createElement("li")
+            li.textContent = bien.nom + " - " + bien.prix + "€"
+            list.appendChild(li)
+        })
+    })
+}
+</script>
+
+</body>
+</html>
