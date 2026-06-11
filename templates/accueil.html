@@ -11,9 +11,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
         <div class="container">
             <a class="navbar-brand" href="/">Y-Plaza</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Basculer la navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <a href="{{ url_for('ajouter') }}" class="btn btn-outline-light btn-sm">Ajouter un bien</a>
         </div>
     </nav>
 
@@ -33,8 +31,12 @@
                         <p class="card-text text-muted">{{ bien.ville }} • {{ bien.surface }} m²</p>
                         <p class="card-text">{{ bien.description }}</p>
                     </div>
-                    <div class="card-footer bg-white border-top-0">
-                        <a href="#" class="btn btn-outline-dark w-100" aria-label="Voir les détails du bien {{ bien.titre }}">Voir le bien</a>
+                    <div class="card-footer bg-white border-top-0 d-flex justify-content-between">
+                        <a href="#" class="btn btn-outline-dark btn-sm w-50 me-1">Voir</a>
+                        
+                        <form action="{{ url_for('supprimer', id=bien.id) }}" method="POST" class="w-50 ms-1" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce bien ?');">
+                            <button type="submit" class="btn btn-outline-danger btn-sm w-100">Supprimer</button>
+                        </form>
                     </div>
                 </div>
             </div>
