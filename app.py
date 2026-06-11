@@ -8,14 +8,14 @@ app = Flask(__name__)
 def accueil():
     conn = get_db_connection()
     if conn is None:
-        return "Erreur : Base de données non connectée. Mais le site Flask fonctionne !"
+        return "Erreur : Base de données non connectée."
 
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
     try:
         cursor.execute("SELECT * FROM biens WHERE statut = 'A vendre'")
         lignes = cursor.fetchall()
     except:
-        lignes = [] # Sécurité si la table n'existe pas encore
+        lignes = [] 
     
     biens = []
     for ligne in lignes:
