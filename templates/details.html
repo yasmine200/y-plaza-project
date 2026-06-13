@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ bien.titre }} - Y-Plaza</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="/">Y-Plaza</a>
+            <a href="/" class="btn btn-outline-light btn-sm">Retour à la liste</a>
+        </div>
+    </nav>
+
+    <main class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-lg border-0">
+                    <div class="card-header bg-dark text-white py-3">
+                        <h1 class="h3 mb-0">{{ bien.titre }}</h1>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2 class="display-6 text-primary fw-bold mb-0">{{ bien.prix_formate() }}</h2>
+                            <span class="badge bg-success fs-6">{{ bien.statut }}</span>
+                        </div>
+                        
+                        <div class="row mb-4 text-muted border-bottom pb-3">
+                            <div class="col-6">
+                                <strong>📍 Ville :</strong> {{ bien.ville }}
+                            </div>
+                            <div class="col-6 text-end">
+                                <strong>📐 Surface :</strong> {{ bien.surface }} m²
+                            </div>
+                        </div>
+                        
+                        <h4 class="h5 mt-4 mb-3">Description complète</h4>
+                        <p class="card-text" style="white-space: pre-line;">{{ bien.description }}</p>
+                    </div>
+                    <div class="card-footer bg-light p-3 text-center">
+                        <a href="/" class="btn btn-secondary">← Revenir à l'accueil</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

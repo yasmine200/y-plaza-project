@@ -16,6 +16,18 @@
     </nav>
 
     <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              {% set bs_class = 'success' if category == 'success' else 'danger' if category == 'danger' else 'warning' %}
+              <div class="alert alert-{{ bs_class }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
         <header class="mb-4 text-center">
             <h1 class="display-5 fw-bold">Biens immobiliers à vendre</h1>
             <p class="text-muted">Découvrez nos opportunités résidentielles et professionnelles.</p>
@@ -29,10 +41,10 @@
                         <h2 class="card-title h5">{{ bien.titre }}</h2>
                         <h3 class="card-subtitle mb-2 text-primary fw-bold">{{ bien.prix_formate() }}</h3>
                         <p class="card-text text-muted">{{ bien.ville }} • {{ bien.surface }} m²</p>
-                        <p class="card-text">{{ bien.description }}</p>
+                        <p class="card-text text-truncate">{{ bien.description }}</p>
                     </div>
                     <div class="card-footer bg-white border-top-0 d-flex justify-content-between">
-                        <a href="#" class="btn btn-outline-dark btn-sm w-50 me-1">Voir</a>
+                        <a href="{{ url_for('details', id=bien.id) }}" class="btn btn-outline-dark btn-sm w-50 me-1">Voir</a>
                         
                         <form action="{{ url_for('supprimer', id=bien.id) }}" method="POST" class="w-50 ms-1" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce bien ?');">
                             <button type="submit" class="btn btn-outline-danger btn-sm w-100">Supprimer</button>
