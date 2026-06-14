@@ -8,42 +8,49 @@
 </head>
 <body class="bg-light">
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5 shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="/">Y-Plaza</a>
-            <a href="/" class="btn btn-outline-light btn-sm">Retour à la liste</a>
+            <a class="navbar-brand fw-bold" href="/">Y-PLAZA</a>
+            <a href="/" class="btn btn-outline-light btn-sm">Retour à l'accueil</a>
         </div>
     </nav>
 
-    <main class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card shadow-lg border-0">
-                    <div class="card-header bg-dark text-white py-3">
-                        <h1 class="h3 mb-0">{{ bien.titre }}</h1>
-                    </div>
-                    <div class="card-body p-4">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h2 class="display-6 text-primary fw-bold mb-0">{{ bien.prix_formate() }}</h2>
-                            <span class="badge bg-success fs-6">{{ bien.statut }}</span>
+    <main class="container mb-5">
+        <div class="card shadow-lg border-0 overflow-hidden rounded-4">
+            <div class="row g-0">
+                
+                <div class="col-md-6">
+                    <img src="{{ bien.image_url }}" class="img-fluid w-100 h-100" alt="Photo de {{ bien.titre }}" style="object-fit: cover; min-height: 500px;">
+                </div>
+                
+                <div class="col-md-6 bg-white">
+                    <div class="card-body p-5 d-flex flex-column h-100">
+                        
+                        <div class="mb-auto">
+                            <span class="badge bg-success mb-3 fs-6 px-3 py-2 rounded-pill">À vendre</span>
+                            <h1 class="card-title fw-bold text-dark mb-2 display-6">{{ bien.titre }}</h1>
+                            <h2 class="text-primary fw-bold mb-4 display-5">{{ bien.prix_formate() }}</h2>
+                            
+                            <div class="d-flex gap-4 mb-4 p-3 bg-light rounded-3 text-dark">
+                                <div><strong class="text-muted d-block small text-uppercase mb-1">Ville</strong> <span class="fs-5">{{ bien.ville }}</span></div>
+                                <div class="border-start ps-4"><strong class="text-muted d-block small text-uppercase mb-1">Surface</strong> <span class="fs-5">{{ bien.surface }} m²</span></div>
+                            </div>
+                            
+                            <h3 class="h5 fw-bold border-bottom pb-2 mt-4">Description du bien</h3>
+                            <p class="card-text text-secondary mt-3 fs-5" style="line-height: 1.8; white-space: pre-line;">{{ bien.description }}</p>
                         </div>
                         
-                        <div class="row mb-4 text-muted border-bottom pb-3">
-                            <div class="col-6">
-                                <strong>📍 Ville :</strong> {{ bien.ville }}
-                            </div>
-                            <div class="col-6 text-end">
-                                <strong>📐 Surface :</strong> {{ bien.surface }} m²
-                            </div>
+                        <div class="mt-5 pt-4 border-top d-flex gap-3">
+                            <a href="/" class="btn btn-outline-dark px-4 py-2 fw-bold w-100">Retour</a>
+                            
+                            {% if session.get('role') in ['Admin', 'Commercial'] %}
+                                <a href="{{ url_for('modifier', id=bien.id) }}" class="btn btn-warning px-4 py-2 fw-bold w-100 text-dark">Modifier l'annonce</a>
+                            {% endif %}
                         </div>
                         
-                        <h4 class="h5 mt-4 mb-3">Description complète</h4>
-                        <p class="card-text" style="white-space: pre-line;">{{ bien.description }}</p>
-                    </div>
-                    <div class="card-footer bg-light p-3 text-center">
-                        <a href="/" class="btn btn-secondary">← Revenir à l'accueil</a>
                     </div>
                 </div>
+                
             </div>
         </div>
     </main>

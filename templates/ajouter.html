@@ -23,29 +23,40 @@
                         <h1 class="h5 mb-0">Ajouter une nouvelle annonce</h1>
                     </div>
                     <div class="card-body">
-                        <form method="POST">
+                        <form method="POST" enctype="multipart/form-data">
+                            
                             <div class="mb-3">
                                 <label for="titre" class="form-label">Titre de l'annonce</label>
-                                <input type="text" class="form-control" id="titre" name="titre" required>
+                                <input type="text" class="form-control" id="titre" name="titre" required aria-required="true" aria-label="Entrez le titre du bien immobilier">
                             </div>
+                            
                             <div class="row mb-3">
                                 <div class="col">
                                     <label for="prix" class="form-label">Prix (€)</label>
-                                    <input type="number" step="0.01" class="form-control" id="prix" name="prix" required>
+                                    <input type="number" step="0.01" class="form-control" id="prix" name="prix" required aria-required="true" aria-label="Entrez le prix en euros">
                                 </div>
                                 <div class="col">
                                     <label for="surface" class="form-label">Surface (m²)</label>
-                                    <input type="number" class="form-control" id="surface" name="surface" required>
+                                    <input type="number" class="form-control" id="surface" name="surface" required aria-required="true" aria-label="Entrez la surface en mètres carrés">
                                 </div>
                             </div>
+                            
                             <div class="mb-3">
                                 <label for="ville" class="form-label">Ville</label>
-                                <input type="text" class="form-control" id="ville" name="ville" required>
+                                <input type="text" class="form-control" id="ville" name="ville" required aria-required="true" aria-label="Entrez la ville du bien">
                             </div>
+                            
                             <div class="mb-3">
                                 <label for="description" class="form-label">Description</label>
-                                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                                <textarea class="form-control" id="description" name="description" rows="3" aria-label="Entrez une description détaillée du bien"></textarea>
                             </div>
+                            
+                            <div class="mb-4 border p-3 bg-light rounded">
+                                <label for="image" class="form-label fw-bold text-primary">📷 Photo du bien (Optionnel)</label>
+                                <input type="file" class="form-control" id="image" name="image" accept="image/*" aria-label="Sélectionnez une photo pour le bien">
+                                <div class="form-text">Si aucune photo n'est choisie, une image par défaut sera utilisée.</div>
+                            </div>
+
                             <button type="submit" class="btn btn-success w-100">Publier le bien</button>
                         </form>
                     </div>

@@ -1,5 +1,5 @@
 class BienImmobilier:
-    def __init__(self, id, titre, description, prix, surface, ville, statut):
+    def __init__(self, id, titre, description, prix, surface, ville, statut, image_url):
         self.id = id
         self.titre = titre
         self.description = description
@@ -7,6 +7,7 @@ class BienImmobilier:
         self.surface = surface
         self.ville = ville
         self.statut = statut
+        self.image_url = image_url  # <-- Nouvelle ligne pour stocker le chemin de la photo
 
     def prix_formate(self):
         return f"{self.prix:,.2f} €".replace(',', ' ')
