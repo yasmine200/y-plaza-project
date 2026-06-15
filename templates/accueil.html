@@ -8,10 +8,25 @@
 </head>
 <body class="bg-light">
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="/">Y-Plaza</a>
-            <a href="{{ url_for('ajouter') }}" class="btn btn-outline-light btn-sm">Ajouter un bien</a>
+            <a class="navbar-brand fw-bold" href="/">Y-PLAZA</a>
+            <div class="d-flex align-items-center">
+                
+                {% if session.get('utilisateur') %}
+                    <span class="text-light me-3 d-none d-md-inline">Profil : <span class="badge bg-secondary">{{ session.get('role') }}</span></span>
+                    
+                    {% if session.get('role') in ['Admin', 'Commercial'] %}
+                        <a href="{{ url_for('ajouter') }}" class="btn btn-success btn-sm me-2">+ Ajouter</a>
+                    {% endif %}
+                    
+                    <a href="{{ url_for('logout') }}" class="btn btn-outline-danger btn-sm">Déconnexion</a>
+                
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-sm">Espace Staff</a>
+                {% endif %}
+                
+            </div>
         </div>
     </nav>
 
@@ -20,7 +35,7 @@
           {% if messages %}
             {% for category, message in messages %}
               {% set bs_class = 'success' if category == 'success' else 'danger' if category == 'danger' else 'warning' %}
-              <div class="alert alert-{{ bs_class }} alert-dismissible fade show" role="alert">
+              <div class="alert alert-{{ bs_class }} alert-dismissible fade show shadow-sm" role="alert">
                 {{ message }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
               </div>
@@ -28,33 +43,52 @@
           {% endif %}
         {% endwith %}
 
-        <header class="mb-4 text-center">
-            <h1 class="display-5 fw-bold">Biens immobiliers à vendre</h1>
-            <p class="text-muted">Découvrez nos opportunités résidentielles et professionnelles.</p>
+        <!-- EN-TÊTE DE PRÉSENTATION Y-PLAZA -->
+        <header class="mb-5 text-center bg-white p-5 rounded shadow-sm border-top border-4 border-primary">
+            <h1 class="display-6 fw-bold text-dark mb-4">Plus qu’une agence immobilière, un partenaire de confiance.</h1>
+            <p class="text-secondary lead mx-auto" style="max-width: 850px; line-height: 1.6;">
+                Avec son siège à Aix-en-Provence et un réseau national de 12 agences, <strong>Y-Plaza</strong> met à votre service son expertise du marché immobilier pour vous accompagner à chaque étape de votre projet. Vente, achat, investissement : bénéficiez d’un accompagnement personnalisé et d’une connaissance approfondie de votre secteur.
+            </p>
         </header>
 
         <div class="row row-cols-1 row-cols-md-3 g-4">
             {% for bien in biens %}
             <div class="col">
-                <div class="card h-100 shadow-sm">
+                <div class="card h-100 shadow-sm border-0">
+                    
+                    <!-- L'image dynamique -->
+                    <img src="{{ bien.image_url }}" class="card-img-top" alt="Photo du bien" style="height: 200px; object-fit: cover;">
+                    
                     <div class="card-body">
-                        <h2 class="card-title h5">{{ bien.titre }}</h2>
-                        <h3 class="card-subtitle mb-2 text-primary fw-bold">{{ bien.prix_formate() }}</h3>
-                        <p class="card-text text-muted">{{ bien.ville }} • {{ bien.surface }} m²</p>
+                        <h2 class="card-title h5 text-dark fw-bold">{{ bien.titre }}</h2>
+                        <h3 class="card-subtitle mb-3 text-primary fw-bold">{{ bien.prix_formate() }}</h3>
+                        <p class="card-text text-muted small"><i class="bi bi-geo-alt"></i> {{ bien.ville }} • {{ bien.surface }} m²</p>
                         <p class="card-text text-truncate">{{ bien.description }}</p>
                     </div>
-                    <div class="card-footer bg-white border-top-0 d-flex justify-content-between">
-                        <a href="{{ url_for('details', id=bien.id) }}" class="btn btn-outline-dark btn-sm w-50 me-1">Voir</a>
+                    
+                    <!-- LE NOUVEAU FOOTER AVEC LE BOUTON MODIFIER -->
+                    <div class="card-footer bg-white border-top-0 d-flex justify-content-between pb-3">
+                        <a href="{{ url_for('details', id=bien.id) }}" class="btn btn-outline-dark btn-sm {% if session.get('role') not in ['Admin', 'Commercial'] %}w-100{% endif %}">Détails</a>
                         
-                        <form action="{{ url_for('supprimer', id=bien.id) }}" method="POST" class="w-50 ms-1" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce bien ?');">
-                            <button type="submit" class="btn btn-outline-danger btn-sm w-100">Supprimer</button>
-                        </form>
+                        {% if session.get('role') in ['Admin', 'Commercial'] %}
+                        <div class="d-flex w-100 ms-1 gap-1">
+                            <!-- Le bouton Modifier -->
+                            <a href="{{ url_for('modifier', id=bien.id) }}" class="btn btn-outline-warning btn-sm w-50">Modifier</a>
+                            
+                            {% if session.get('role') == 'Admin' %}
+                            <form action="{{ url_for('supprimer', id=bien.id) }}" method="POST" class="w-50" onsubmit="return confirm('Action irréversible. Confirmer la suppression ?');">
+                                <button type="submit" class="btn btn-outline-danger btn-sm w-100">Supprimer</button>
+                            </form>
+                            {% endif %}
+                        </div>
+                        {% endif %}
                     </div>
+                    
                 </div>
             </div>
             {% else %}
             <div class="col-12 text-center mt-5">
-                <p class="lead">Aucun bien n'est actuellement en vente dans la base de données.</p>
+                <p class="lead text-muted">Aucun bien n'est actuellement en vente dans la base de données.</p>
             </div>
             {% endfor %}
         </div>
