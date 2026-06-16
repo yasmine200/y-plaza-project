@@ -1,18 +1,28 @@
 import os
 
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 
 from functools import wraps
 
 from werkzeug.utils import secure_filename
 
-from models.dao import recuperer_biens_a_vendre, ajouter_bien_bdd, supprimer_bien_bdd, recuperer_bien_par_id, modifier_bien_bdd
+from werkzeug.security import check_password_hash
+
+from models.dao import (
+    recuperer_biens_a_vendre,
+    ajouter_bien_bdd,
+    supprimer_bien_bdd,
+    recuperer_bien_par_id,
+    modifier_bien_bdd,
+    recuperer_utilisateur_par_email,
+)
 
 
 
 app = Flask(__name__)
 
-app.secret_key = 'y_plaza_super_secret_key_2026'
+# Clé secrète lue depuis l'environnement (valeur de repli pour le développement).
+app.secret_key = os.environ.get('YPLAZA_SECRET_KEY', 'dev-secret-change-me')
 
 
 
@@ -28,17 +38,15 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+
+# Extensions d'images autorisées pour l'upload (sécurité).
+EXTENSIONS_AUTORISEES = {'png', 'jpg', 'jpeg', 'webp', 'gif'}
 
 
-
-USERS = {
-
-    "admin@yplaza.fr": {"mdp": "admin123", "role": "Admin"},
-
-    "commercial@yplaza.fr": {"mdp": "comm123", "role": "Commercial"}
-
-}
+def extension_autorisee(nom_fichier):
+    return '.' in nom_fichier and \
+        nom_fichier.rsplit('.', 1)[1].lower() in EXTENSIONS_AUTORISEES
 
 
 
@@ -80,11 +88,13 @@ def login():
 
         mdp = request.form['mdp']
 
-        if email in USERS and USERS[email]['mdp'] == mdp:
+        utilisateur = recuperer_utilisateur_par_email(email)
+
+        if utilisateur and check_password_hash(utilisateur['mot_de_passe_hash'], mdp):
 
             session['utilisateur'] = email
 
-            session['role'] = USERS[email]['role']
+            session['role'] = utilisateur['role']
 
             flash(f"Bienvenue, connecté en tant que {session['role']}.", "success")
 
@@ -122,7 +132,7 @@ def accueil():
 
 @app.route('/ajouter', methods=('GET', 'POST'))
 
-@role_requis('Admin', 'Commercial')
+@role_requis('Commercial')
 
 def ajouter():
 
@@ -145,6 +155,12 @@ def ajouter():
         file = request.files.get('image')
 
         if file and file.filename != '':
+
+            if not extension_autorisee(file.filename):
+
+                flash("Format d'image non autorisé (png, jpg, jpeg, webp, gif).", "danger")
+
+                return render_template('ajouter.html')
 
             filename = secure_filename(file.filename)
 
@@ -176,7 +192,7 @@ def ajouter():
 
 @app.route('/modifier/<int:id>', methods=('GET', 'POST'))
 
-@role_requis('Admin', 'Commercial')
+@role_requis('Commercial')
 
 def modifier(id):
 
@@ -214,6 +230,12 @@ def modifier(id):
 
             # Si on upload une NOUVELLE photo, on la sauvegarde
 
+            if not extension_autorisee(file.filename):
+
+                flash("Format d'image non autorisé (png, jpg, jpeg, webp, gif).", "danger")
+
+                return render_template('modifier.html', bien=bien)
+
             filename = secure_filename(file.filename)
 
             chemin_complet = os.path.join(app.config['UPLOAD_FOLDER'], filename)
@@ -250,7 +272,7 @@ def modifier(id):
 
 @app.route('/supprimer/<int:id>', methods=['POST'])
 
-@role_requis('Admin')
+@role_requis('Commercial')
 
 def supprimer(id):
 
@@ -260,6 +282,14 @@ def supprimer(id):
 
     return redirect(url_for('accueil'))
 
+
+
+@app.route('/api/biens')
+
+def api_biens():
+    """API REST : expose la liste des biens au format JSON."""
+    biens = recuperer_biens_a_vendre()
+    return jsonify([bien.to_dict() for bien in biens])
 
 
 @app.route('/bien/<int:id>')

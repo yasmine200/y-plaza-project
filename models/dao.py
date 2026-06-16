@@ -76,10 +76,19 @@ def modifier_bien_bdd(id_bien, titre, description, prix, surface, ville, image_u
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute('''
-        UPDATE biens 
+        UPDATE biens
         SET titre = ?, description = ?, prix = ?, surface = ?, ville = ?, image_url = ?
         WHERE id = ?
     ''', (titre, description, prix, surface, ville, image_url, id_bien))
     conn.commit()
     cursor.close()
     conn.close()
+
+def recuperer_utilisateur_par_email(email):
+    """Récupère un utilisateur du staff par son email (pour l'authentification)."""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM utilisateurs WHERE email = ?', (email,))
+    ligne = cursor.fetchone()
+    conn.close()
+    return ligne

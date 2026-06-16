@@ -4,8 +4,8 @@ from sklearn.linear_model import LinearRegression
 import sqlite3
 
 def get_data_from_db():
-    """Récupère les données des biens depuis SQLite."""
-    conn = sqlite3.connect('data/agences.db')
+    """Récupère les données des biens depuis la base réelle de l'application."""
+    conn = sqlite3.connect('y_plaza.db')
     df = pd.read_sql_query("SELECT surface, prix FROM biens WHERE surface > 0 AND prix > 0", conn)
     conn.close()
     return df

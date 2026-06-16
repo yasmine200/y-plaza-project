@@ -11,3 +11,16 @@ class BienImmobilier:
 
     def prix_formate(self):
         return f"{self.prix:,.2f} €".replace(',', ' ')
+
+    def to_dict(self):
+        """Représentation sérialisable en JSON (utilisée par l'API REST)."""
+        return {
+            "id": self.id,
+            "titre": self.titre,
+            "description": self.description,
+            "prix": self.prix,
+            "surface": self.surface,
+            "ville": self.ville,
+            "statut": self.statut,
+            "image_url": self.image_url,
+        }

@@ -16,14 +16,14 @@
                 {% if session.get('utilisateur') %}
                     <span class="text-light me-3 d-none d-md-inline">Profil : <span class="badge bg-secondary">{{ session.get('role') }}</span></span>
                     
-                    {% if session.get('role') in ['Admin', 'Commercial'] %}
+                    {% if session.get('role') == 'Commercial' %}
                         <a href="{{ url_for('ajouter') }}" class="btn btn-success btn-sm me-2">+ Ajouter</a>
                     {% endif %}
                     
                     <a href="{{ url_for('logout') }}" class="btn btn-outline-danger btn-sm">Déconnexion</a>
                 
                 {% else %}
-                    <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-sm">Espace Staff</a>
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-sm">Connexion</a>
                 {% endif %}
                 
             </div>
@@ -68,18 +68,16 @@
                     
                     <!-- LE NOUVEAU FOOTER AVEC LE BOUTON MODIFIER -->
                     <div class="card-footer bg-white border-top-0 d-flex justify-content-between pb-3">
-                        <a href="{{ url_for('details', id=bien.id) }}" class="btn btn-outline-dark btn-sm {% if session.get('role') not in ['Admin', 'Commercial'] %}w-100{% endif %}">Détails</a>
-                        
-                        {% if session.get('role') in ['Admin', 'Commercial'] %}
+                        <a href="{{ url_for('details', id=bien.id) }}" class="btn btn-outline-dark btn-sm {% if session.get('role') != 'Commercial' %}w-100{% endif %}">Détails</a>
+
+                        {% if session.get('role') == 'Commercial' %}
                         <div class="d-flex w-100 ms-1 gap-1">
                             <!-- Le bouton Modifier -->
                             <a href="{{ url_for('modifier', id=bien.id) }}" class="btn btn-outline-warning btn-sm w-50">Modifier</a>
-                            
-                            {% if session.get('role') == 'Admin' %}
+
                             <form action="{{ url_for('supprimer', id=bien.id) }}" method="POST" class="w-50" onsubmit="return confirm('Action irréversible. Confirmer la suppression ?');">
                                 <button type="submit" class="btn btn-outline-danger btn-sm w-100">Supprimer</button>
                             </form>
-                            {% endif %}
                         </div>
                         {% endif %}
                     </div>

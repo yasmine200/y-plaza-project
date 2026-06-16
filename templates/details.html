@@ -43,7 +43,7 @@
                         <div class="mt-5 pt-4 border-top d-flex gap-3">
                             <a href="/" class="btn btn-outline-dark px-4 py-2 fw-bold w-100">Retour</a>
                             
-                            {% if session.get('role') in ['Admin', 'Commercial'] %}
+                            {% if session.get('role') == 'Commercial' %}
                                 <a href="{{ url_for('modifier', id=bien.id) }}" class="btn btn-warning px-4 py-2 fw-bold w-100 text-dark">Modifier l'annonce</a>
                             {% endif %}
                         </div>
