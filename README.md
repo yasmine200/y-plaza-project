@@ -32,4 +32,4 @@ Pour lancer le projet, assurez-vous d'avoir Python 3 installé.
 4. Lancer l'application : `python3 app.py`
 
 ---
-*Développeurs : Yasmine Fakir (Backend/Dev) & Guylan [Nom] (Infrastructure/Réseau)*
+*Développeurs : Yasmine Fakir (Backend/Dev) & Guylan Richaud (Infrastructure/Réseau)*
